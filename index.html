@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Cracker | Simulador Algoritmo de Grover</title>
+    <title>Quantum Cracker | Simulador Grover</title>
     <style>
         :root {
             --bg: #0b0f19;
@@ -15,328 +15,265 @@
             --text: #e2e8f0;
             --muted: #94a3b8;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         body {
-            background-color: var(--bg);
+            background: var(--bg);
             color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
         }
-
-        .app-container {
+        .app {
             background: var(--card);
             width: 100%;
-            max-width: 540px;
+            max-width: 480px;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 242, 254, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 24px;
+            border: 1px solid #1e293b;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
         }
-
-        header {
+        h1 {
             text-align: center;
-            margin-bottom: 25px;
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 6px;
         }
-
-        header h1 {
-            font-size: 1.6rem;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-        }
-
-        header p {
-            color: var(--muted);
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-
-        .control-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
+        .sub {
+            text-align: center;
             font-size: 0.85rem;
             color: var(--muted);
-            margin-bottom: 8px;
-            font-weight: 600;
+            margin-bottom: 20px;
         }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
+        label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+            font-weight: bold;
         }
-
+        .row { display: flex; gap: 8px; margin-bottom: 16px; }
         input[type="text"] {
             flex: 1;
             background: #090d16;
-            border: 1px solid #2d3748;
+            border: 1px solid #334155;
             color: var(--primary);
-            font-size: 1.4rem;
-            letter-spacing: 6px;
+            font-size: 1.3rem;
+            letter-spacing: 5px;
             text-align: center;
-            padding: 12px;
-            border-radius: 12px;
-            outline: none;
+            padding: 10px;
+            border-radius: 10px;
             font-weight: bold;
-            transition: border 0.3s;
         }
-
-        input[type="text"]:focus {
-            border-color: var(--primary);
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
         }
-
-        button.btn-random {
+        .btn-sec {
             background: #1e293b;
             color: var(--text);
+            padding: 0 14px;
             border: 1px solid #334155;
-            padding: 0 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: 0.2s;
         }
-
-        button.btn-random:hover {
-            background: #334155;
-        }
-
-        .slider-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .badge {
-            background: rgba(0, 242, 254, 0.15);
-            color: var(--primary);
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        input[type="range"] {
+        .btn-main {
             width: 100%;
-            accent-color: var(--primary);
-            margin-top: 8px;
-            cursor: pointer;
-        }
-
-        button.btn-run {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
+            padding: 14px;
             background: linear-gradient(90deg, var(--secondary), var(--primary));
             color: #0b0f19;
             font-size: 1rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.2s;
-            margin-top: 10px;
+            margin-top: 8px;
         }
-
-        button.btn-run:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.4);
-        }
-
-        .rands-grid {
+        .slider-box { margin-bottom: 16px; }
+        .slider-top { display: flex; justify-content: space-between; font-size: 0.8rem; }
+        input[type="range"] { width: 100%; margin-top: 6px; accent-color: var(--primary); }
+        .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-top: 25px;
+            gap: 8px;
+            margin-top: 20px;
         }
-
-        .rand-card {
+        .card {
             background: #090d16;
             border: 1px solid #1e293b;
-            border-radius: 12px;
-            padding: 12px 8px;
+            border-radius: 10px;
+            padding: 10px 4px;
             text-align: center;
-            transition: all 0.3s ease;
         }
-
-        .rand-card.hit {
-            border-color: var(--success);
-            box-shadow: 0 0 15px rgba(0, 230, 118, 0.2);
-        }
-
-        .rand-card.miss {
-            border-color: var(--error);
-            box-shadow: 0 0 15px rgba(255, 82, 82, 0.2);
-        }
-
-        .rand-title {
-            font-size: 0.75rem;
-            color: var(--muted);
-            margin-bottom: 5px;
-        }
-
-        .rand-value {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--text);
-        }
-
-        .rand-status {
-            font-size: 0.7rem;
-            margin-top: 4px;
-            font-weight: 600;
-        }
-
-        .hit .rand-value, .hit .rand-status { color: var(--success); }
-        .miss .rand-value, .miss .rand-status { color: var(--error); }
-
-        .summary-box {
-            margin-top: 25px;
+        .card.hit { border-color: var(--success); }
+        .card.miss { border-color: var(--error); }
+        .c-title { font-size: 0.7rem; color: var(--muted); }
+        .c-val { font-size: 1.4rem; font-weight: bold; margin: 4px 0; }
+        .c-stat { font-size: 0.65rem; font-weight: bold; }
+        .hit .c-val, .hit .c-stat { color: var(--success); }
+        .miss .c-val, .miss .c-stat { color: var(--error); }
+        .resumo {
+            margin-top: 18px;
             background: #090d16;
-            border-radius: 14px;
-            padding: 18px;
+            padding: 14px;
+            border-radius: 12px;
             border: 1px solid #1e293b;
             display: none;
         }
-
-        .summary-row {
+        .res-line {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
         }
-
-        .summary-row:last-child {
-            margin-bottom: 0;
-            padding-top: 10px;
-            border-top: 1px solid #1e293b;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .progress-bg {
-            width: 100%;
-            height: 8px;
-            background: #1e293b;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary), var(--success));
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .error-msg {
+        .erro {
             color: var(--error);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-align: center;
-            margin-top: 10px;
+            margin-bottom: 10px;
             display: none;
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header>
-        <h1>⚛️ QUANTUM CRACKER</h1>
-        <p>Simulador do Algoritmo de Grover (8 Registradores)</p>
-    </header>
+<div class="app">
+    <h1>QUANTUM CRACKER</h1>
+    <p class="sub">Simulador Matemático de Grover (8 Registradores)</p>
 
-    <div class="control-group">
-        <label for="senhaInput">SENHA ALVO (8 DÍGITOS)</label>
-        <div class="input-row">
-            <input type="text" id="senhaInput" maxlength="8" value="12345678" placeholder="00000000">
-            <button class="btn-random" onclick="gerarSenhaAleatoria()">🎲 Aleatória</button>
+    <label>SENHA DE 8 DÍGITOS</label>
+    <div class="row">
+        <input type="text" id="senha" maxlength="8" value="12345678" inputmode="numeric">
+        <button class="btn-sec" onclick="gerarAleatoria()">Aleatória</button>
+    </div>
+    <div class="erro" id="msgErro">Digite exatamente 8 números de 0 a 9.</div>
+
+    <div class="slider-box">
+        <div class="slider-top">
+            <span>PULSOS QUÂNTICOS</span>
+            <span id="txtPulsos" style="color: var(--primary);">2 Pulsos (~96.1%)</span>
         </div>
-        <div class="error-msg" id="errorMsg">Digite exatamente 8 números (0 a 9).</div>
+        <input type="range" id="pulsos" min="1" max="3" value="2" oninput="mudarPulso()">
     </div>
 
-    <div class="control-group">
-        <div class="slider-header">
-            <label for="pulsosRange">PULSOS QUÂNTICOS (GROVER)</label>
-            <span class="badge" id="pulsosLabel">2 Pulsos (~96.1% prob.)</span>
-        </div>
-        <input type="range" id="pulsosRange" min="1" max="3" value="2" oninput="atualizarSlider()">
-    </div>
+    <button class="btn-main" onclick="rodar()">EXECUTAR MEDIÇÃO</button>
 
-    <button class="btn-run" onclick="executarSimulacao()">⚡ EXECUTAR MEDIÇÃO QUÂNTICA</button>
+    <div class="grid" id="grid"></div>
 
-    <div class="rands-grid" id="randsGrid">
-        <!-- Os 8 cards Rand 1 a Rand 8 serão gerados aqui -->
-    </div>
-
-    <div class="summary-box" id="summaryBox">
-        <div class="summary-row">
-            <span>Senha Original:</span>
-            <strong id="resOriginal" style="letter-spacing: 3px;">--------</strong>
+    <div class="resumo" id="resumo">
+        <div class="res-line">
+            <span>Senha Alvo:</span>
+            <strong id="outAlvo">--------</strong>
         </div>
-        <div class="summary-row">
-            <span>Colapso Medido:</span>
-            <strong id="resMedida" style="letter-spacing: 3px; color: var(--primary);">--------</strong>
+        <div class="res-line">
+            <span>Senha Medida:</span>
+            <strong id="outMedida" style="color: var(--primary);">--------</strong>
         </div>
-        <div class="summary-row">
-            <span>Taxa de Precisão:</span>
-            <span id="resPorcentagem" style="color: var(--success);">0%</span>
-        </div>
-        <div class="progress-bg">
-            <div class="progress-fill" id="progressFill"></div>
+        <div class="res-line" style="margin-bottom: 0;">
+            <span>Precisão:</span>
+            <strong id="outPct" style="color: var(--success);">0%</strong>
         </div>
     </div>
 </div>
 
 <script>
-    // Inicializa os 8 cards vazios na tela
-    const grid = document.getElementById('randsGrid');
+    const grid = document.getElementById('grid');
     for (let i = 1; i <= 8; i++) {
         grid.innerHTML += `
-            <div class="rand-card" id="card-${i}">
-                <div class="rand-title">RAND ${i}</div>
-                <div class="rand-value" id="val-${i}">?</div>
-                <div class="rand-status" id="stat-${i}">SUPERPOSIÇÃO</div>
+            <div class="card" id="c-${i}">
+                <div class="c-title">RAND ${i}</div>
+                <div class="c-val" id="v-${i}">?</div>
+                <div class="c-stat" id="s-${i}">PRONTO</div>
             </div>
         `;
     }
 
-    function atualizarSlider() {
-        const p = document.getElementById('pulsosRange').value;
-        const label = document.getElementById('pulsosLabel');
-        if (p == 1) label.innerText = "1 Pulso (~78.4% prob.)";
-        if (p == 2) label.innerText = "2 Pulsos (~96.1% prob.)";
-        if (p == 3) label.innerText = "3 Pulsos (~58.0% prob. - Over-rotation)";
+    function mudarPulso() {
+        const p = document.getElementById('pulsos').value;
+        const txt = document.getElementById('txtPulsos');
+        if (p == "1") txt.innerText = "1 Pulso (~78.4%)";
+        if (p == "2") txt.innerText = "2 Pulsos (~96.1%)";
+        if (p == "3") txt.innerText = "3 Pulsos (~58.0%)";
     }
 
-    function gerarSenhaAleatoria() {
-        let senha = "";
-        for (let i = 0; i < 8; i++) {
-            senha += Math.floor(Math.random() * 10);
-        }
-        document.getElementById('senhaInput').value = senha;
-        document.getElementById('errorMsg').style.display = 'none';
+    function gerarAleatoria() {
+        let s = "";
+        for (let i = 0; i < 8; i++) s += Math.floor(Math.random() * 10);
+        document.getElementById('senha').value = s;
+        document.getElementById('msgErro').style.display = 'none';
     }
 
-    // Motor Matemático Real do Algoritmo de Grover (N = 10 estados)
-    function resolverDigitoQuantico(digitoAlvo, pulsos) {
-        let amplitudes = new Array(10).fill(1.0 / Math.sqrt(10.0));
+    function grover(alvo, pulsos) {
+        let amp = [];
+        let ini = 1.0 / Math.sqrt(10.0);
+        for (let i = 0; i < 10; i++) amp.push(ini);
 
         for (let p = 0; p < pulsos; p++) {
-            // Oráculo Quântico: inverte a fase do dígito alvo
-            amplitudes[digitoAlvo] = -amplitudes[digitoAlvo];
+            amp[alvo] = -amp[alvo];
+            let soma = 0;
+            for (let i = 0; i < 10; i++) soma += amp[i];
+            let media = soma / 10.0;
+            for (let i = 0; i < 10; i++) amp[i] = (2.0 * media) - amp[i];
+        }
 
-            // Difusor de Grover: inversão em torno da média
+        let r = Math.random();
+        let acc = 0;
+        for (let i = 0; i < 10; i++) {
+            acc += amp[i] * amp[i];
+            if (r <= acc) return i;
+        }
+        return 9;
+    }
+
+    function rodar() {
+        const senha = document.getElementById('senha').value.trim();
+        const erro = document.getElementById('msgErro');
+
+        if (!/^\d{8}$/.test(senha)) {
+            erro.style.display = 'block';
+            return;
+        }
+        erro.style.display = 'none';
+
+        const pulsos = parseInt(document.getElementById('pulsos').value);
+        let acertos = 0;
+        let encontrada = "";
+
+        for (let i = 0; i < 8; i++) {
+            const alvo = parseInt(senha[i]);
+            const medido = grover(alvo, pulsos);
+            encontrada += medido;
+
+            const card = document.getElementById('c-' + (i + 1));
+            const val = document.getElementById('v-' + (i + 1));
+            const stat = document.getElementById('s-' + (i + 1));
+
+            val.innerText = medido;
+            card.className = 'card';
+
+            if (medido === alvo) {
+                card.classList.add('hit');
+                stat.innerText = "ACERTOU";
+                acertos++;
+            } else {
+                card.classList.add('miss');
+                stat.innerText = "ERA " + alvo;
+            }
+        }
+
+        const pct = ((acertos / 8) * 100).toFixed(1);
+        document.getElementById('resumo').style.display = 'block';
+        document.getElementById('outAlvo').innerText = senha;
+        document.getElementById('outMedida').innerText = encontrada;
+        document.getElementById('outPct').innerText = pct + "% (" + acertos + "/8)";
+    }
+
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        const s = params.get('senha');
+        if (s && /^\d{8}$/.test(s)) {
+            document.getElementById('senha').value = s;
+            if (params.get('auto') === '1') rodar();
+        }
+    };
+</script>
+
+</body>
+</html>
